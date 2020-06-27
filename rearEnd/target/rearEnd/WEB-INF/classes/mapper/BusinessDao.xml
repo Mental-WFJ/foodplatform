@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rearEnd.dao.BusinessDao">
+    <resultMap type="Business" id="BusinessResultMap">
+        <id column="id" property="id"/>
+        <result column="img_file_name" property="imgFileName"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="price" property="price"/>
+        <result column="address" property="address"/>
+        <result column="number" property="number"/>
+        <result column="desc" property="desc"/>
+        <result column="city" property="city"/>
+        <result column="category" property="category"/>
+        <result column="star_total_num" property="starTotalNum"/>
+        <result column="comment_total_num" property="commentTotalNum"/>
+        <result column="pay" property="pay"/>
+        <result column="useable" property="useable"/>
+        <result column="app_id" property="appId"/>
+    </resultMap>
+
+    <insert id="insert">
+		insert into business(title,address,city,category, app_id)
+		values(#{title},#{address},#{city},#{category}, #{appId})
+	</insert>
+
+    <select id="selectById" resultType="Business">
+		select
+		id,img_file_name,title,subtitle,price,address,number,`desc`,city,category,star_total_num,comment_total_num, pay, useable
+		from business where useable = 1 and id=#{_parameter}
+	</select>
+
+    <select id="selectByIdSys" resultType="Business">
+		select
+		id,img_file_name,title,subtitle,price,address,number,`desc`,city,category,star_total_num,comment_total_num, pay, useable
+		from business where id=#{_parameter}
+	</select>
+
+    <select id="selectByPage" resultType="Business">
+        select b.id,b.img_file_name,b.title,b.subtitle,b.price
+        ,b.address,b.number,b.`desc`,b.city,b.category,b.star_total_num,b.comment_total_num, b.pay, b.useable
+        from business b
+        <where>
+            <if test="title != null and title != ''">
+                and b.title like '%' #{title} '%'
+            </if>
+            <if test="subtitle != null and subtitle != ''">
+                and b.subtitle like '%' #{subtitle} '%'
+            </if>
+            <if test="desc != null and desc != ''">
+                and b.`desc` like '%' #{desc} '%'
+            </if>
+        </where>
+        order by id
+    </select>
+
+    <select id="selectLikeByPage" resultType="Business">
+        select
+        id,img_file_name,title,subtitle,price,address,number,`desc`,city,category,star_total_num,comment_total_num, pay,
+        useable
+        from business
+        <where>
+            <if test="title != null and title != ''">
+                and title like '%' #{title} '%'
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+        </where>
+        order by id
+    </select>
+
+    <update id="updateNumber">
+        update business b,
+        (select business_id,count(*) cou from orders
+        where orders.create_time &lt;= #{endTime}
+        <if test="startTime != null">
+            and orders.create_time &gt; #{startTime}
+        </if>
+        group by business_id) c
+        set b.number=b.number + c.cou where b.id=c.business_id
+    </update>
+
+    <update id="updatePrice">
+        update business b,
+        (select business_id,sum(num) total_num, sum(price) total_price from orders
+        where orders.create_time &lt;= #{endTime}
+        <if test="startTime != null">
+            and orders.create_time &gt; #{startTime}
+        </if>
+        group by business_id) c
+        set b.price=b.price + c.total_price/c.total_num where b.id=c.business_id
+    </update>
+
+    <update id="updateStar">
+        update business b,
+
+        (select o.business_id,sum(c.star) star_num,count(*) comment_num from comment c,orders o where c.orders_id=o.id
+        and c.create_time &lt;= #{endTime}
+        <if test="startTime != null">
+            and c.create_time &gt; #{startTime}
+        </if>
+        group by o.business_id)t
+
+        set b.star_total_num = b.star_total_num + t.star_num/t.comment_num,b.comment_total_num = b.comment_total_num +
+        t.comment_num
+        where b.id=t.business_id
+    </update>
+
+    <delete id="delete">
+        delete from business where id=#{id}
+    </delete>
+
+    <update id="update">
+        update business
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="subtitle != null and subtitle != ''">
+                subtitle = #{subtitle},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="imgFileName != null and imgFileName != ''">
+                img_file_name = #{imgFileName},
+            </if>
+            <if test="useable != null">
+                useable = #{useable},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc` = #{desc},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

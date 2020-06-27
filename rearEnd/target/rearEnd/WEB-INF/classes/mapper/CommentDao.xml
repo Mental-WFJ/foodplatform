@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rearEnd.dao.CommentDao">
+	<resultMap type="Comment" id="CommentResultMap">
+		<id column="id" property="id" />
+		<result column="orders_id" property="ordersId"/>
+		<result column="comment" property="comment" />
+		<result column="star" property="star" />
+		<result column="create_time" property="createTime" />
+		<result column="useable" property="useable"/>
+		<association property="orders" resultMap="com.rearEnd.dao.OrdersDao.OrdersResultMap"/>
+	</resultMap>
+
+	<insert id="insert">
+		insert into comment(orders_id,comment,star,create_time)
+		 values(#{ordersId},#{comment},#{star},#{createTime})
+	</insert>
+	
+	<select id="selectByPage" resultMap="CommentResultMap">
+		select c.id,c.orders_id,c.comment,c.star,c.create_time,c.useable,m.phone
+		from comment c,orders o,business b,member m
+		where c.useable = 1 and c.orders_id = o.id and o.business_id = b.id
+		<if test="orders.business.id != null">
+			and b.id = #{orders.business.id}
+		</if>
+		order by create_time desc
+	</select>
+
+	<update id="update">
+		update comment
+		set useable = 0
+		where id = #{_parameter}
+	</update>
+</mapper>

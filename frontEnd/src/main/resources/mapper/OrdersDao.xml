@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.OrdersDao">
+	<resultMap type="Orders" id="OrdersResultMap">
+		<id column="id" property="id" />
+		<result column="business_id" property="businessId"/>
+		<result column="member_id" property="memberId"/>
+		<result column="comment_state" property="commentState" />
+		<result column="price" property="price" />
+		<result column="num" property="num" />
+		<result column="create_time" property="createTime"/>
+		<association property="business" javaType="Business">
+			<result column="img_file_name" property="imgFileName"/>
+			<result column="title" property="title"/>
+			<result column="number" property="number"/>
+		</association>
+		<association property="member" javaType="Member">
+			<result column="phone" property="phone"/>
+			<result column="name" property="name"/>
+		</association>
+	</resultMap>
+
+	<insert id="insert">
+		insert into orders(business_id,member_id,num,price,create_time)
+		 values(#{businessId},#{memberId},#{num},#{price}, #{createTime})
+	</insert>
+	
+	<select id="selectById" resultType="Orders">
+		select id,business_id,member_id,num,comment_state,price
+		from orders where id=#{_parameter}
+	</select>
+	
+	<update id="update">
+		update orders
+		set comment_state = 2
+		where id=#{_parameter}
+	</update>
+	
+	<select id="selectByMemberId" parameterType="java.lang.Long" resultMap="OrdersResultMap">
+		select o.id, o.business_id, o.member_id, o.comment_state,o.price,o.num, o.create_time, b.title
+		from orders o,business b where o.member_id = #{memberId} and o.business_id=b.id
+		order by create_time desc
+	</select>
+
+	<select id="selectBybusinessId" parameterType="java.lang.Long" resultMap="OrdersResultMap">
+		select o.id,o.price,o.num, m.name, m.phone
+		from orders o,member m where o.comment_state = 2 and o.member_id=m.id and o.business_id = #{businessId}
+		order by create_time desc
+	</select>
+</mapper>

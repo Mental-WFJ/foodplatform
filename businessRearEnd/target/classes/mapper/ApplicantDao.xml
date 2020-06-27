@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.businessRearEnd.dao.ApplicantDao">
+    <resultMap type="Applicant" id="ApplicantResultMap">
+        <id column="id" property="id" />
+        <result column="applicant_name" property="applicantName"/>
+        <result column="applicant_phone" property="applicantPhone" />
+        <result column="business_name" property="businessName" />
+        <result column="business_city" property="businessCity"/>
+        <result column="business_category" property="businessCategory" />
+        <result column="business_address" property="businessAddress" />
+        <result column="business_image" property="businessImage" />
+        <result column="flag" property="flag" />
+        <result column="login_password" property="loginPassword" />
+    </resultMap>
+
+    <select id="selectAppByPhone" parameterType="java.lang.String" resultType="Applicant">
+        select applicant.id, applicant_name, applicant_phone, business_name, business_city, business_category, business_address, business_image, flag, login_password
+        from applicant, business
+        where flag = 1 and useable = 1 and applicant_phone = #{_parameter} and applicant.id = app_id
+    </select>
+
+    <select id="selectAppById" parameterType="java.lang.Long" resultType="Applicant">
+        select applicant.id, applicant_name, applicant_phone, business_name, business_city, business_category, business_address, business_image, flag, login_password
+        from applicant, business
+        where flag = 1 and useable = 1 and applicant.id = #{_parameter} and applicant.id = app_id
+    </select>
+    
+    <update id="updatePwd">
+        update applicant
+        set login_password = #{arg1}
+        where id = #{arg0}
+    </update>
+
+    <update id="updateInfo">
+        update applicant
+        <set>
+            <if test="businessName != null">
+                business_name = #{businessName},
+            </if>
+            <if test="businessCity != null">
+                business_city = #{businessCity},
+            </if>
+            <if test="businessCategory != null">
+                business_category = #{businessCategory},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

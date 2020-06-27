@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rearEnd.dao.ComComplainDao">
+    <resultMap type="ComComplain" id="ComComplainResultMap">
+        <id column="id" property="id" />
+        <result column="comment_id" property="commentId"/>
+        <result column="member_id" property="memberId" />
+        <result column="reason" property="reason" />
+        <result column="flag" property="flag" />
+        <result column="create_time" property="createTime"/>
+        <association property="member" javaType="Member">
+            <result column="name" property="name"/>
+            <result column="phone" property="phone"/>
+        </association>
+        <association property="comment" javaType="Comment">
+            <result column="comment" property="comment"/>
+        </association>
+    </resultMap>
+
+    <select id="getComComplainByPage" resultMap="ComComplainResultMap">
+        select c.comment, m.name, m.phone, cc.id, cc.reason, cc.flag, cc.create_time
+        from com_complain cc, member m, comment c
+        where cc.flag = 0 and cc.member_id = m.id and cc.comment_id = c.id
+    </select>
+
+    <select id="getComComplainByID" parameterType="java.lang.Long" resultMap="ComComplainResultMap">
+        select c.comment, m.name, m.phone, cc.id, cc.comment_id, cc.reason, cc.flag, cc.create_time
+        from com_complain cc, member m, comment c
+        where cc.id = #{_parameter} and cc.member_id = m.id and cc.comment_id = c.id
+    </select>
+
+    <update id="updateFlag">
+        update com_complain
+        set flag = #{arg1}
+        where id = #{arg0}
+    </update>
+</mapper>

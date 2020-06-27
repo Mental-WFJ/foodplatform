@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.businessRearEnd.dao.ReportDao">
+
+	<select id="countOrder" parameterType="java.lang.Long" resultType="java.util.HashMap">
+		select SUM(o.price) total, COUNT(o.id) count, MONTH(o.create_time) month
+		FROM orders o, business b
+		where b.id = #{_parameter} and o.business_id = b.id
+		GROUP BY MONTH(o.create_time)
+		ORDER BY month
+	</select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.businessRearEnd.dao.OrdersDao">
+	<resultMap type="Orders" id="OrdersResultMap">
+		<id column="id" property="id" />
+		<result column="business_id" property="businessId"/>
+		<result column="member_id" property="memberId"/>
+		<result column="comment_state" property="commentState" />
+		<result column="price" property="price" />
+		<result column="num" property="num" />
+		<result column="create_time" property="createTime"/>
+		<association property="business" javaType="Business">
+			<result column="img_file_name" property="imgFileName"/>
+			<result column="title" property="title"/>
+			<result column="number" property="number"/>
+		</association>
+		<association property="member" javaType="Member">
+			<result column="phone" property="phone"/>
+			<result column="name" property="name"/>
+		</association>
+	</resultMap>
+
+	<select id="selectBybusinessId" resultMap="OrdersResultMap">
+		select o.id, o.price,o.num, m.name, m.phone
+		from orders o,member m where o.comment_state = 2 and o.member_id=m.id and o.business_id = #{businessId}
+		order by create_time desc
+	</select>
+</mapper>

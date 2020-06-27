@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.FavoritiesDao">
+    <resultMap type="Favorities" id="FavoritiesResultMap">
+        <id column="id" property="id" />
+        <result column="business_id" property="businessId" />
+        <result column="member_id" property="memberId" />
+        <association property="business" javaType="Business">
+            <result column="img_file_name" property="imgFileName"/>
+            <result column="title" property="title"/>
+            <result column="subtitle" property="subtitle"/>
+            <result column="price" property="price"/>
+            <result column="number" property="number"/>
+            <result column="city" property="city"/>
+            <result column="category" property="category"/>
+            <result column="star_total_num" property="starTotalNum"/>
+        </association>
+        <association property="member" javaType="Member">
+            <result column="phone" property="phone"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert">
+		insert into favorities(business_id, member_id)
+		 values(#{businessId}, #{memberId})
+	</insert>
+
+    <delete id="delete">
+        delete from favorities
+        where member_id = #{memberId} and business_id = #{businessId}
+    </delete>
+
+    <select id="getListByMemberID" parameterType="java.lang.Long" resultMap="FavoritiesResultMap">
+        select f.id, f.business_id, f.member_id, b.title, m.phone, m.name
+        from favorities f, business b, member m
+        where f.member_id = #{memberId} and f.member_id = m.id and f.business_id = b.id and b.useable = 1
+    </select>
+
+    <select id="getListByTwo" resultMap="FavoritiesResultMap">
+        select f.id, f.business_id, f.member_id, b.img_file_name, b.title, b.subtitle, b.price, b.number,
+        b.star_total_num, m.phone, m.name
+        from favorities f, business b, member m
+        where f.member_id = #{arg0} and f.member_id = m.id and f.business_id = b.id and b.useable = 1 and b.city = #{arg1}
+        <if test="arg2 != null and arg2 != ''">
+            and b.title like '%' #{arg2} '%'
+        </if>
+    </select>
+
+    <select id="getListByThree" resultMap="FavoritiesResultMap">
+        select f.id, f.business_id, f.member_id, b.img_file_name, b.title, b.subtitle, b.price, b.number,
+        b.star_total_num, m.phone, m.name
+        from favorities f, business b, member m
+        where f.member_id = #{arg0} and f.member_id = m.id and f.business_id = b.id and b.useable = 1 and b.city = #{arg1}
+        <if test="arg2 != null and arg2 != ''">
+            and b.category = #{arg2}
+        </if>
+        <if test="arg3 != null and arg3 != ''">
+            and b.title like '%' #{arg3} '%'
+        </if>
+    </select>
+</mapper>

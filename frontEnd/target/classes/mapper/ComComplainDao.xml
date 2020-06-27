@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.ComComplainDao">
+    <resultMap type="ComComplain" id="ComComplainResultMap">
+        <id column="id" property="id" />
+        <result column="comment_id" property="commentId"/>
+        <result column="member_id" property="memberId" />
+        <result column="reason" property="reason" />
+        <result column="flag" property="flag"/>
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <insert id="insertComComplain">
+        insert into com_complain(comment_id, member_id, reason, create_time)
+        values(#{commentId}, #{memberId}, #{reason}, #{createTime})
+    </insert>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.AdDao">
+	
+	<select id="getAdList" resultType="Ad">
+		select id,title,img_file_name,link,weight
+		from ad
+		order by weight desc,id
+	</select>
+</mapper>

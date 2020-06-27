@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.TendencyDao">
+    <resultMap type="Tendency" id="TendencyResultMap">
+        <id column="id" property="id" />
+        <result column="member_id" property="memberId"/>
+        <result column="type_one" property="typeOne" />
+        <result column="type_two" property="typeTwo" />
+        <result column="type_three" property="typeThree" />
+        <result column="type_four" property="typeFour"/>
+        <result column="type_five" property="typeFive" />
+        <result column="type_six" property="typeSix"/>
+        <result column="type_seven" property="typeSeven" />
+        <result column="type_eight" property="typeEight"/>
+        <result column="type_nine" property="typeNine" />
+        <result column="type_ten" property="typeTen"/>
+        <result column="type_eleven" property="typeEleven" />
+        <result column="type_twelve" property="typeTwelve"/>
+        <result column="type_thirteen" property="typeThirteen" />
+        <result column="type_fourteen" property="typeFourteen"/>
+    </resultMap>
+
+    <update id="updateTendency">
+        update tendency
+        <set>
+            <if test="typeOne == 1">
+                type_one = type_one + 1,
+            </if>
+            <if test="typeTwo == 1">
+                type_two = type_two + 1,
+            </if>
+            <if test="typeThree == 1">
+                type_three = type_three + 1,
+            </if>
+            <if test="typeFour == 1">
+                type_four = type_four + 1,
+            </if>
+            <if test="typeFive == 1">
+                type_five = type_five + 1,
+            </if>
+            <if test="typeSix == 1">
+                type_six = type_six + 1,
+            </if>
+            <if test="typeSeven == 1">
+                type_seven = type_seven + 1,
+            </if>
+            <if test="typeEight == 1">
+                type_eight = type_eight + 1,
+            </if>
+            <if test="typeNine == 1">
+                type_nine = type_nine + 1,
+            </if>
+            <if test="typeTen == 1">
+                type_ten = type_ten + 1,
+            </if>
+            <if test="typeEleven == 1">
+                type_eleven = type_eleven + 1,
+            </if>
+            <if test="typeTwelve == 1">
+                type_twelve = type_twelve + 1,
+            </if>
+            <if test="typeThirteen == 1">
+                type_thirteen = type_thirteen + 1,
+            </if>
+            <if test="typeFourteen == 1">
+                type_fourteen = type_fourteen + 1,
+            </if>
+        </set>
+        where member_id = #{memberId}
+    </update>
+
+    <select id="getTendencyByID" parameterType="java.lang.Long" resultType="Tendency">
+        select * from tendency
+        where member_id = #{_parameter}
+    </select>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rearEnd.dao.BusComplainDao">
+    <resultMap type="BusComplain" id="BusComplainResultMap">
+        <id column="id" property="id" />
+        <result column="business_id" property="businessId"/>
+        <result column="member_id" property="memberId" />
+        <result column="reason" property="reason" />
+        <result column="flag" property="flag" />
+        <result column="create_time" property="createTime"/>
+        <association property="member" javaType="Member">
+            <result column="name" property="name"/>
+            <result column="phone" property="phone"/>
+        </association>
+        <association property="business" javaType="Business">
+            <result column="title" property="title"/>
+        </association>
+    </resultMap>
+
+    <select id="getBusComplainByPage" resultMap="BusComplainResultMap">
+        select b.title, m.name, m.phone, bc.id, bc.reason, bc.flag, bc.create_time
+        from bus_complain bc, member m, business b
+        where bc.flag = 0 and bc.member_id = m.id and bc.business_id = b.id
+    </select>
+
+    <select id="getBusComplainByID" parameterType="java.lang.Long" resultMap="BusComplainResultMap">
+        select b.title, m.name, m.phone, bc.id, bc.business_id, bc.reason, bc.flag, bc.create_time
+        from bus_complain bc, member m, business b
+        where bc.id = #{_parameter} and bc.member_id = m.id and bc.business_id = b.id
+    </select>
+
+    <update id="updateFlag">
+        update bus_complain
+        set flag = #{arg1}
+        where id = #{arg0}
+    </update>
+
+</mapper>

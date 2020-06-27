@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.businessRearEnd.dao.BusinessDao">
+    <resultMap type="Business" id="BusinessResultMap">
+        <id column="id" property="id"/>
+        <result column="img_file_name" property="imgFileName"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="price" property="price"/>
+        <result column="address" property="address"/>
+        <result column="number" property="number"/>
+        <result column="desc" property="desc"/>
+        <result column="city" property="city"/>
+        <result column="category" property="category"/>
+        <result column="star_total_num" property="starTotalNum"/>
+        <result column="comment_total_num" property="commentTotalNum"/>
+        <result column="pay" property="pay"/>
+        <result column="useable" property="useable"/>
+        <result column="app_id" property="appId"/>
+    </resultMap>
+
+    <select id="seletByAppId" parameterType="java.lang.Long" resultType="Business">
+        select id,img_file_name,title,subtitle,price,address,number,`desc`,city,category,star_total_num,comment_total_num, pay, useable
+        from business
+        where useable = 1 and app_id = #{_parameter}
+    </select>
+
+    <update id="updateInfo">
+        update business
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="subtitle != null and subtitle != ''">
+                subtitle = #{subtitle},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc` = #{desc},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="imgFileName != null and imgFileName != ''">
+                img_file_name = #{imgFileName}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

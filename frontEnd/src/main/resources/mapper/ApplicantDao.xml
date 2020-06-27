@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frontEnd.dao.ApplicantDao">
+    <resultMap type="Applicant" id="ApplicantResultMap">
+        <id column="id" property="id" />
+        <result column="applicant_name" property="applicantName"/>
+        <result column="applicant_phone" property="applicantPhone" />
+        <result column="business_name" property="businessName" />
+        <result column="business_city" property="businessCity"/>
+        <result column="business_category" property="businessCategory" />
+        <result column="business_address" property="businessAddress" />
+        <result column="business_image" property="businessImage" />
+        <result column="flag" property="flag" />
+        <result column="login_password" property="loginPassword" />
+    </resultMap>
+
+    <insert id="insertApp">
+        insert into applicant(applicant_name, applicant_phone, business_name, business_city, business_category, business_address, business_image)
+        values(#{applicantName}, #{applicantPhone}, #{businessName}, #{businessCity}, #{businessCategory}, #{businessAddress}, #{businessImage})
+    </insert>
+
+    <select id="getApplicantList" resultType="Applicant">
+        select applicant_phone
+        from applicant
+    </select>
+</mapper>

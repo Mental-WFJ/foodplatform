@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.businessRearEnd.dao.CommentDao">
+    <resultMap type="Comment" id="CommentResultMap">
+        <id column="id" property="id" />
+        <result column="orders_id" property="ordersId"/>
+        <result column="comment" property="comment" />
+        <result column="star" property="star" />
+        <result column="create_time" property="createTime" />
+        <result column="useable" property="useable"/>
+        <association property="orders" resultMap="com.businessRearEnd.dao.OrdersDao.OrdersResultMap"/>
+    </resultMap>
+
+    <select id="getByPage" resultMap="CommentResultMap">
+		select c.id,c.comment,c.star, o.num, o.price, c.create_time, m.name
+        from comment c,orders o,business b,member m
+        where c.useable = 1 and c.orders_id = #{ordersId} and c.orders_id = o.id and o.business_id = b.id and o.member_id = m.id
+    </select>
+</mapper>
